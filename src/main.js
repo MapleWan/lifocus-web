@@ -4,11 +4,11 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import App from './App.vue'
 import router from './router'
 import 'virtual:uno.css'
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
 import './assets/styles/index.css'
 import 'normalize.css'
 import 'animate.css'
-import ElementPlus from 'element-plus'
-import 'element-plus/dist/index.css'
 const app = createApp(App)
 
 const pinia = createPinia()
