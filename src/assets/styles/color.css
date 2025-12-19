@@ -1,0 +1,73 @@
+:root {
+  --lf-font-primary-color: #0a0a0a;
+  --lf-font-primary-color-revert: #f2f2f2;
+  --lf-font-secondary-color: #7c3aed;
+  --lf-background-primary-color: #f4f7fa;
+  --lf-background-secondary-color: #161c2d;
+
+  /* element plus 主题颜色修改 */
+  --el-color-primary: #0a0a0a;
+  --el-color-primary-dark-1: #080808;
+  --el-color-primary-light-1: #1a1a1a;
+  --el-color-primary-light-2: #2d2d2d;
+  --el-color-primary-light-3: #404040;
+  --el-color-primary-light-4: #525252;
+  --el-color-primary-light-5: #656565;
+  --el-color-primary-light-6: #787878;
+  --el-color-primary-light-7: #8a8a8a;
+  --el-color-primary-light-8: #9d9d9d;
+  --el-color-primary-light-9: #eeedf5;
+  --el-color-danger: #ca6f6f;
+  /* background-color: var(--lf-background-primary-color); */
+
+  color: var(--lf-font-primary-color);
+}
+
+.lf-theme-light {
+  --lf-font-primary-color: #0a0a0a;
+  --lf-font-primary-color-revert: #f2f2f2;
+  --lf-font-secondary-color: #7c3aed;
+  --lf-background-primary-color: #f4f7fa;
+  --lf-background-secondary-color: #161c2d;
+
+  /* element plus 主题颜色修改 */
+  --el-color-primary: #0a0a0a;
+  --el-color-primary-dark-1: #080808;
+  --el-color-primary-light-1: #1a1a1a;
+  --el-color-primary-light-2: #2d2d2d;
+  --el-color-primary-light-3: #404040;
+  --el-color-primary-light-4: #525252;
+  --el-color-primary-light-5: #656565;
+  --el-color-primary-light-6: #787878;
+  --el-color-primary-light-7: #8a8a8a;
+  --el-color-primary-light-8: #9d9d9d;
+  --el-color-primary-light-9: #eeedf5;
+  --el-color-danger: #ca6f6f;
+  /* background-color: var(--lf-background-primary-color); */
+
+  color: var(--lf-font-primary-color);
+}
+
+/* TDOO 这套颜色有待商榷 */
+.lf-theme-dark {
+  --lf-font-primary-color: #f2f2f2;
+  --lf-font-primary-color-revert: #0a0a0a;
+  --lf-font-secondary-color: #f2f2f2;
+  --lf-background-primary-color: #0d0d0d;
+  --lf-background-secondary-color: #f4f7fa;
+
+  /* element plus 主题颜色修改 */
+  --el-color-primary: #f2f2f2;
+  --el-color-primary-dark-1: #f0f0f0;
+  --el-color-primary-light-1: #e8e8e8;
+  --el-color-primary-light-2: #d0d0d0;
+  --el-color-primary-light-3: #b8b8b8;
+  --el-color-primary-light-4: #a0a0a0;
+  --el-color-primary-light-5: #888888;
+  --el-color-primary-light-6: #707070;
+  --el-color-primary-light-7: #585858;
+  --el-color-primary-light-8: #404040;
+  --el-color-primary-light-9: #282828;
+  /* background-color: var(--lf-background-primary-color); */
+  color: var(--lf-font-primary-color);
+}

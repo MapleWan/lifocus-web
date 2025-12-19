@@ -1,0 +1,91 @@
+.lf-glass-effect {
+  background: rgba(11, 11, 12, 0.3);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* 滚动条的 glass-effect 样式 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.lf-div-margin-container {
+  margin: 16px;
+}
+
+.lf-div-padding-container {
+  padding: 16px;
+}
+
+.lf-div-border {
+  border: 1px solid rgba(2, 4, 26, 0.16);
+  border-radius: 8px;
+}
+
+.lf-div-shadow {
+  box-shadow:
+    rgba(0, 0, 0, 0) 0px 0px 0px 0px,
+    rgba(0, 0, 0, 0) 0px 0px 0px 0px,
+    rgba(2, 4, 26, 0.06) 0px 1px 4px 0px;
+}
+
+.lf-message-container {
+  /* font-size: 14px;
+  font-weight: 700;
+  color: #eb6b39; 
+  background-color: #765ce9; */
+
+  /* background: rgba(11, 11, 12, 0.1) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important; */
+  height: 16px;
+  line-height: 16px;
+  font-size: 14px;
+}
+
+.lf-message-container .el-message__icon {
+  display: none;
+}
+
+.lf-message-info {
+  font-weight: 700;
+  /* background-color: gray; */
+}
+
+.lf-message-success {
+  font-weight: 700;
+  /* background-color: aqua; */
+}
+
+.lf-message-error {
+  font-weight: 700;
+  /* background-color: red; */
+}
+
+.lf-message-warning {
+  font-weight: 700;
+  /* background-color: burlywood; */
+}
+
+div {
+  box-sizing: border-box;
+}

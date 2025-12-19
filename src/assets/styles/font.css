@@ -1,0 +1,28 @@
+.lf-heading1 {
+  font-size: 48px;
+  font-weight: 700;
+}
+
+.lf-heading2 {
+  font-size: 36px;
+  font-weight: 700;
+}
+
+.lf-heading3 {
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.lf-heading4 {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.lf-content {
+  font-size: 16px;
+}
+
+.lf-content-bolded {
+  font-size: 16px;
+  font-weight: 700;
+}
