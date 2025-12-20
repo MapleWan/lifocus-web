@@ -17,11 +17,6 @@ const toSearch = () => {
   elMessage.warning('【TODO】打开搜索框..')
 }
 
-// 打开项目
-const openProject = () => {
-  elMessage.warning('【TODO】跳转项目...')
-}
-
 const showAccountSetting = ref(false)
 function switchShowAccountSetting(val) {
   showAccountSetting.value = val
@@ -44,7 +39,7 @@ onMounted(() => {
   <div class="dashboard-container p-4 bg-background-primary h-full flex" :class="{ 'flex-col': !mainStore.isPc }">
     <div v-if="mainStore.isPc" class="left-container w-60 h-full bg-background-primary flex flex-col m-r-4">
       <LeftToolbar :recentProjectList="recentProjectList" :recentProjectListLoading="recentProjectListLoading"
-        @toSearch="toSearch" @openProject="openProject" @switchAccountSetting="switchShowAccountSetting" />
+        @toSearch="toSearch" @switchAccountSetting="switchShowAccountSetting" />
     </div>
     <div v-else class="w-full">
       <TopToolbar @switchAccountSetting="switchShowAccountSetting" />

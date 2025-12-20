@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-
+import ProjectLayout from '@/components/layout/ProjectLayout/index.vue'
 const defaultRouterList = [
   {
     path: '/dashboard',
@@ -19,6 +19,28 @@ const defaultRouterList = [
     path: '/:w+',
     name: '404',
     component: () => import('@/views/error/404.vue'),
+  },
+  {
+    path: '/project',
+    name: 'project',
+    component: ProjectLayout,
+    children: [
+      {
+        path: 'dashboard',
+        name: 'projectDashboard',
+        component: () => import('@/views/project/dashboard/index.vue'),
+      },
+      {
+        path: 'create',
+        name: 'projectNoteCreate',
+        component: () => import('@/views/project/create/index.vue'),
+      },
+      {
+        path: 'dialog',
+        name: 'projectDialog',
+        component: () => import('@/views/project/dialog/index.vue'),
+      },
+    ],
   }
 ]
 

@@ -17,3 +17,12 @@ export function addProjectApi(data) {
     data
   })
 }
+
+// 获取当前项目下的笔记
+export function getProjectNotesApi(params) {
+  return request({
+    url: '/note/projectNote',
+    method: 'get',
+    params
+  })
+}

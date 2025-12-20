@@ -23,6 +23,7 @@ export default defineConfig({
       background: {
         primary: '#f4f7fa',
         secondary: '#161c2d',
+        light: '#fafafa',
         hover: '#eeedf5',
       },
       font: {

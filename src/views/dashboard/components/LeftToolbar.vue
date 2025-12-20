@@ -7,10 +7,15 @@ import LogoIcon from "@/assets/icons/svg/logo.svg"
 import NoDataIcon from "@/assets/icons/svg/noData.svg"
 import { computed } from "vue"
 
+import useMainStore from '@/stores/main'
+const mainStore = useMainStore()
 import useUserStore from "@/stores/user"
+import { useRouter } from "vue-router"
 const userStore = useUserStore()
+const router = useRouter()
 
-const emit = defineEmits(['toSearch', 'openProject', 'switchAccountSetting'])
+
+const emit = defineEmits(['toSearch', 'switchAccountSetting'])
 const props = defineProps({
   recentProjectList: {
     type: Array,
@@ -28,8 +33,9 @@ const projectListLoading = computed(() => {
 function toSearch() {
   emit('toSearch')
 }
-function openProject() {
-  emit('openProject')
+function openProject(project) {
+  mainStore.setCurrentProjectId(project.id)
+  router.push({ name: 'projectDashboard' })
 }
 function openAccountSetting() {
   emit('switchAccountSetting', true)
@@ -64,7 +70,7 @@ function closeAccountSetting() {
           <template v-if="recentProjectList.length > 0">
             <template v-for="item in recentProjectList" :key="item">
               <div class="project-item flex items-center cursor-pointer hover:bg-background-hover p-2 rounded"
-                :title="item.name" @click="openProject">
+                :title="item.name" @click="openProject(item)">
                 <ProjectIcon class="m-r-1 w-4 h-4 flex-shrink-0" v-if="!item.icon" />
                 <img :src="item.icon" class="m-r-1 w-4 h-4 flex-shrink-0" v-else />
                 <div class="project-item-title text-ellipsis overflow-hidden whitespace-nowrap">{{ item.name }}</div>
