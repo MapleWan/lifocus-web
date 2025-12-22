@@ -31,6 +31,16 @@ export function getToken() {
   }
 }
 
+// 获取刷新 token
+export function getRefreshToken() {
+  const isRemember = Cookies.get('isRemember');
+  if (isRemember === 'true') {
+    return Cookies.get('refreshToken') || '';
+  } else {
+    return sessionStorage.getItem('refreshToken') || '';
+  }
+}
+
 // 获取过期时间
 export function getExpiryTime() {
   const isRemember = Cookies.get('isRemember');
@@ -59,7 +69,8 @@ export function removeToken() {
 export async function refreshToken() {
   try {
     const newTokenData = await refreshTokenApi();
-    setToken(newTokenData.access_token, newTokenData.refresh_token, newTokenData.expire_time);
+    debugger
+    setToken(newTokenData.data.access_token, newTokenData.data.refresh_token, newTokenData.data.expire_time);
     return Promise.resolve(newTokenData);
   } catch (error) {
     return Promise.reject(error);

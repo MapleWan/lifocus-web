@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getToken, refreshToken, isTokenExpiringSoon, removeToken } from "@/utils/auth";
+import { getToken, getRefreshToken, refreshToken, isTokenExpiringSoon, removeToken } from "@/utils/auth";
 import { getCurrentProjectId } from "./project";
 import useElMessage from "@/hooks/useElMessage";
 const elMessage = useElMessage();
@@ -15,15 +15,19 @@ const whiteList = ['/auth/login', '/auth/register']
 // 请求拦截器
 
 service.interceptors.request.use(
-  async (config) => {
+  (config) => {
+    if (whiteList.includes(config.url)) {
+      if (config.isRefreshToken) config.headers['Authorization'] = `Bearer ${getRefreshToken()}`
+      return config
+    }
     const token = getToken()
-    if (token && !whiteList.includes(config.url)) {
+    if (token) {
       config.headers['Authorization'] = `Bearer ${token}`
       const projectId = getCurrentProjectId() || ''
       if (projectId) config.headers['X-Project-Id'] = projectId
       // 如果 token 即将过期，则刷新 token
-      if (isTokenExpiringSoon() && config.url !== '/auth/logout') {
-        await refreshToken()
+      if (isTokenExpiringSoon() && !['/auth/logout', ...whiteList].includes(config.url)) {
+        refreshToken()
       }
     }
     return config

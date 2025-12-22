@@ -13,7 +13,8 @@ export function login(data) {
 export function refreshToken() {
   return request({
     url: '/auth/login',
-    method: 'get'
+    method: 'get',
+    isRefreshToken: true
   })
 }
 
