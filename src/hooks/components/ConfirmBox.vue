@@ -1,6 +1,6 @@
 <template>
   <div class="confirm-overlay" @click.self="handleCancel">
-    <div class="confirm-box">
+    <div class="confirm-box animate__animated animate__bounceIn">
       <div class="confirm-header">
         <span class="confirm-title">{{ title }}</span>
         <span class="confirm-close" @click="handleCancel">&times;</span>
