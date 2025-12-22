@@ -30,7 +30,8 @@ export default defineConfig({
         primary: '#0a0a0a',
         secondary: '#7c3aed',
         revert: '#f2f2f2',
-        hover: '#7c3aed'
+        hover: '#7c3aed',
+        danger: '#ca6f6f',
       },
     }
   }
