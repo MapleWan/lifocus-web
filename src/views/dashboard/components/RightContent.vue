@@ -116,14 +116,14 @@ onMounted(() => {
         <div class="project-container-head m-t-8 flex justify-between">
           <div class="flex items-center select-none">
             <div class="flex items-center text-primary-200 m-r-4 cursor-pointer"
-              :class="{ 'text-primary-900': currentProjectTabType === 'active' }"
+              :class="{ 'text-primary-900!': currentProjectTabType === 'active' }"
               @click="changeProjectTabType('active')">
               <ActiveIcon class="w-4 h-4" />
               <div class="m-l-2">活跃中</div>
             </div>
 
             <div class="flex items-center text-primary-200 cursor-pointer"
-              :class="{ 'text-primary-900': currentProjectTabType === 'archived' }"
+              :class="{ 'text-primary-900!': currentProjectTabType === 'archived' }"
               @click="changeProjectTabType('archived')">
               <Files class="w-4 h-4" />
               <div class="m-l-2">归档</div>
