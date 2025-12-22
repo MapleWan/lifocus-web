@@ -7,7 +7,7 @@ import useMainStore from '@/stores/main'
 const mainStore = useMainStore()
 
 const props = defineProps({
-  optionContainerHeight: { type: String, default: '300px' },
+  optionContainerHeight: { type: String, default: 'auto' },
   optionContainerWidth: { type: String, default: '200px' },
   showArrow: { type: Boolean, default: true },
 })
@@ -32,6 +32,7 @@ const showOptions = ref(false) // 是否显示选项
 // 选择选项
 function selectItem(item) {
   projectId.value = item.id
+  keyword.value = ''
   mainStore.setCurrentProjectId(item.id)
   showOptions.value = false
 }
@@ -62,7 +63,7 @@ onBeforeUnmount(() => {
 })
 </script>
 <template>
-  <div class="relative p-x-2 p-y-1 rounded-xl cursor-pointer hover:bg-background-hover hover:border"
+  <div class="relative p-x-2 p-y-1 rounded-xl cursor-pointer hover:bg-background-hover hover:border z-100"
     ref="customSelectRef" :title="projectIdToNameDict[projectId]" @click.self="showOptions = !showOptions">
     <div class="relative flex items-center w-full">
       <ArrowRight v-if="showArrow" class="w-4 h-4 transition-transform duration-500 ease-in-out m-r-2" :class="{
@@ -73,7 +74,8 @@ onBeforeUnmount(() => {
     </div>
 
     <transition name="slide-fade">
-      <div class="option-container" :style="{ height: optionContainerHeight, width: optionContainerWidth }"
+      <div class="option-container"
+        :style="{ height: optionContainerHeight, width: optionContainerWidth, maxHeight: optionContainerHeight !== 'auto' ? optionContainerHeight : '300px' }"
         v-if="showOptions">
         <el-input placeholder="搜索项目" v-model="keyword" size="small" :prefix-icon="Search"></el-input>
         <el-scrollbar class="flex-1" :style="{ height: optionContainerHeight }">
