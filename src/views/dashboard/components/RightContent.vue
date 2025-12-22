@@ -129,23 +129,23 @@ onMounted(() => {
               <div class="m-l-2">归档</div>
             </div>
 
-            <div class="p-2 m-l-4 rounded-50% cursor-pointer hover:bg-background-hover">
-              <el-dropdown trigger="click" v-if="listType === 'card'" @command="handleCommand">
-                <span class="el-dropdown-link">
+            <el-dropdown trigger="click" v-if="listType === 'card'" @command="handleCommand">
+              <span class="el-dropdown-link">
+                <div class="p-2 m-l-4 rounded-50% cursor-pointer hover:bg-background-hover">
                   <Sort class="w-4 h-4" />
-                </span>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item command="updated_at-down">更新日期(&#8595;)</el-dropdown-item>
-                    <el-dropdown-item command="updated_at-up">更新日期(&#8593;)</el-dropdown-item>
-                    <el-dropdown-item command="created_at-down">创建日期(&#8595;)</el-dropdown-item>
-                    <el-dropdown-item command="created_at-up">创建日期(&#8593;)</el-dropdown-item>
-                    <el-dropdown-item command="name-down">项目名称(&#8595;)</el-dropdown-item>
-                    <el-dropdown-item command="name-up">项目名称(&#8593;)</el-dropdown-item>
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
-            </div>
+                </div>
+              </span>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item command="updated_at-down">更新日期(&#8595;)</el-dropdown-item>
+                  <el-dropdown-item command="updated_at-up">更新日期(&#8593;)</el-dropdown-item>
+                  <el-dropdown-item command="created_at-down">创建日期(&#8595;)</el-dropdown-item>
+                  <el-dropdown-item command="created_at-up">创建日期(&#8593;)</el-dropdown-item>
+                  <el-dropdown-item command="name-down">项目名称(&#8595;)</el-dropdown-item>
+                  <el-dropdown-item command="name-up">项目名称(&#8593;)</el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
           </div>
 
           <div class="type-change-bar rounded-2xl bg-background-hover flex items-center p-y-1 p-x-2 relative z-[1]">

@@ -1,6 +1,6 @@
 <template>
-  <MdPreview v-model="content" v-if="isPreview" v-bind="previewConfigTemplate" />
-  <MdEditor v-model="content" v-else v-bind="editorConfigTemplate" :footers="footers">
+  <MdPreview v-model="content" v-if="isPreview" v-bind="previewConfigTemplate" style="height: 100%;" />
+  <MdEditor v-model="content" v-else v-bind="editorConfigTemplate" style="height: 100%;" :footers="footers">
     <template #defFooters>
       {{ dayjs().format('YYYY-MM-DD HH:mm:ss') }}
     </template>
@@ -66,7 +66,7 @@ const defaultEditorConfig = {
 }
 
 const defaultPreviewConfig = {
-  theme: 'dark', // 主题，可选值：dark、light
+  theme: 'light', // 主题，可选值：dark、light
   showCodeRowNumber: true, // 代码块是否显示行号
   previewTheme: 'github', // 预览主题，可选值：default、github、vuepress、mk-cute、smart-blue、cyanosis
   codeTheme: 'github', // 代码主题，可选值：atom、a11y、github、gradient、kimbie、paraiso、qtcreator、stackoverflow

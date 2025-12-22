@@ -1,30 +1,39 @@
 <script setup>
-import useElMessage from '@/hooks/useElMessage';
-const elMessage = useElMessage();
-const props = defineProps({
+import { ref } from 'vue';
+
+defineProps({
   noteInfo: {
     type: Object,
     required: true
   },
-  // 是否在轮播图内
-  isInner: {
-    type: Boolean,
-    default: false
-  },
 })
-function goToNote() {
-  elMessage.warning(`【TODO】Go to note, noteId: ${props.noteInfo.id}`)
+
+const isShowActions = ref(false)
+const toggleActions = () => {
+  isShowActions.value = !isShowActions.value
 }
 </script>
 <template>
-  <div class="note-card lf-div-shadow lf-div-border p-x-2 p-t-2 rounded-2xl cursor-pointer hover:shadow-none"
-    @click="goToNote">
-    <div class="h-40 flex flex-col justify-between" :class="{ 'w-35': !isInner }">
-      <div class="title line-clamp-2 font-bold text-xl">{{ noteInfo.title }}</div>
+  <div class="note-card relative lf-div-shadow lf-div-border p-x-2 p-t-2 rounded-2xl cursor-pointer hover:shadow-none"
+    @mouseenter="toggleActions" @mouseleave="toggleActions">
+    <div class="h-60 w-40 flex flex-col justify-between">
+      <div class="title line-clamp-2 font-bold text-xl">{{ noteInfo?.title || '' }}</div>
       <div class="divider w-full h-2px bg-background-hover m-y-2"></div>
-      <div class="content text-primary-200 text-sm h-20 overflow-auto">{{ noteInfo.content }}</div>
-      <div class="time text-xs m-t-1 text-primary-50">{{ noteInfo.updated_at }}</div>
+      <!-- <div class="content text-primary-200 text-sm flex-1 overflow-x-hidden overflow-y-auto">{{ noteInfo?.content || ''
+      }}</div> -->
+      <el-scrollbar class="content text-primary-200 text-sm flex-1 overflow-x-hidden break-all">
+        {{ noteInfo?.content || '' }}
+      </el-scrollbar>
+      <div class="time text-xs m-t-1 text-primary-50">{{ noteInfo?.updated_at || '' }}</div>
     </div>
+    <transition enter-active-class="transition-all duration-300 ease-out"
+      leave-active-class="transition-all duration-300 ease-in" enter-from-class="opacity-0 scale-75"
+      leave-to-class="opacity-0 scale-75">
+      <div class="absolute top-2 right-2 flex items-center" v-show="isShowActions" @click.stop>
+        <slot name="actions">
+        </slot>
+      </div>
+    </transition>
   </div>
 </template>
 
