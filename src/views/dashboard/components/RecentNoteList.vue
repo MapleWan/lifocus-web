@@ -77,7 +77,7 @@ onBeforeUnmount(() => {
 </script>
 <template>
   <div class="relative">
-    <div ref="noteListRef" class="recent-note-list p-t-4 flex gap-3 overflow-x-auto">
+    <div ref="noteListRef" class="recent-note-list p-y-4 flex gap-3 overflow-x-auto">
       <template v-for="note in recentNoteList" :key="note.id">
         <NoteCard :noteInfo="note" />
       </template>
@@ -107,5 +107,28 @@ onBeforeUnmount(() => {
 <style scoped>
 .recent-note-list {
   scroll-behavior: smooth;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.6);
 }
 </style>
