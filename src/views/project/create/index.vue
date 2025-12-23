@@ -3,7 +3,8 @@ import SidebarDialog from '@/views/project/dialog/SidebarDialog.vue'
 import { ArrowLeftBold, ArrowRightBold } from '@element-plus/icons-vue'
 import LeftProjectNoteList from './components/LeftProjectNoteList.vue'
 import NoteForm from '../dashboard/components/NoteForm.vue'
-import { ref, watch } from 'vue'
+import useMainStore from '@/stores/main'
+import { ref, watch, computed } from 'vue'
 
 // 对话框折叠
 const isDialogCollapsed = ref(true)
@@ -26,6 +27,7 @@ function refreshProjectNodeList() {
   leftProjectNoteListRef?.value?.searchWithHistoryQuery()
 }
 
+
 // 笔记编辑相关
 const editorMode = ref('edit')
 const noteInfo = ref({ title: '', content: '' })
@@ -34,6 +36,13 @@ function closeCreateNoteDialog(isNeedRefresh = false) {
     refreshProjectNodeList()
   }
 }
+
+const mainStore = useMainStore()
+const currentProjectId = computed(() => mainStore.currentProjectId)
+watch(() => currentProjectId.value, () => {
+  noteInfo.value = { title: '', content: '' }
+  refreshProjectNodeList()
+}, { immediate: true })
 </script>
 <template>
   <div class="create-container flex">

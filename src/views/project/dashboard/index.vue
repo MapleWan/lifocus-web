@@ -19,7 +19,7 @@ import { useThrottleFn } from '@vueuse/core'
 import { deleteNoteApi, getNoteByIdApi } from '@/api/note'
 const elMessage = useElMessage()
 const customConfirm = useCustomConfirm()
-const mainStore = useMainStore();
+const mainStore = useMainStore()
 const isShowCreateNoteDialog = ref(false)
 
 const currentProjectId = computed(() => mainStore.currentProjectId)
