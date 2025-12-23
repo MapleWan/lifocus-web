@@ -163,8 +163,8 @@ onMounted(() => {
           </div>
         </div>
         <div class="flex-1 overflow-hidden" v-loading="projectListLoading">
-          <ProjectListCard :projectList="projectList" v-if="listType === 'card'" />
-          <projectListTable :projectList="projectList" v-else />
+          <ProjectListCard :projectList="projectList" v-show="listType === 'card'" />
+          <projectListTable :projectList="projectList" v-show="listType === 'list'" />
         </div>
       </div>
     </el-scrollbar>

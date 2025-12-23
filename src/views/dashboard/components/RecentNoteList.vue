@@ -1,8 +1,14 @@
 <script setup>
 import { ArrowLeft, ArrowRight } from '@element-plus/icons-vue'
-import NoteCard from '@/components/NoteCard/index.vue';
-import { ref, onMounted, onBeforeUnmount, watch, nextTick } from 'vue';
+import NoteCard from '@/components/NoteCard/index.vue'
+import { ref, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
 import NoDataIcon from "@/assets/icons/svg/noData.svg"
+import useMainStore from '@/stores/main'
+import { useRouter } from 'vue-router'
+import Cookies from 'js-cookie'
+
+const mainStore = useMainStore()
+const router = useRouter()
 
 const props = defineProps({
   recentNoteList: {
@@ -60,6 +66,12 @@ function scrollRight() {
   }
 }
 
+function goToNote(projectId, noteId) {
+  mainStore.setCurrentProjectId(projectId)
+  Cookies.set('noteId', noteId)
+  router.push({ name: 'projectDashboard' })
+}
+
 watch(() => props.recentNoteList, async () => {
   await nextTick()
   checkArrowVisibility()
@@ -79,7 +91,7 @@ onBeforeUnmount(() => {
   <div class="relative">
     <div ref="noteListRef" class="recent-note-list p-y-4 flex gap-3 overflow-x-auto">
       <template v-for="note in recentNoteList" :key="note.id">
-        <NoteCard :noteInfo="note" />
+        <NoteCard :noteInfo="note" @click="goToNote(note.project_id, note.id)" />
       </template>
     </div>
     <template v-if="recentNoteList.length === 0">

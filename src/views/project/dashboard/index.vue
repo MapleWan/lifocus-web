@@ -2,13 +2,13 @@
 import SidebarDialog from '@/views/project/dialog/SidebarDialog.vue'
 import NoteCard from '@/components/NoteCard/index.vue'
 import NoDataIcon from "@/assets/icons/svg/noData.svg"
-import { useRouter } from 'vue-router'
 import { getProjectNotesApi } from '@/api/project'
 import CardIcon from '@/assets/icons/svg/card.svg'
 import ListIcon from '@/assets/icons/svg/list.svg'
 import SearchIcon from '@/assets/icons/svg/search.svg'
 import { Plus, DocumentCopy, EditPen, Delete, Search, CloseBold, ArrowLeftBold, ArrowRightBold } from '@element-plus/icons-vue'
-const router = useRouter()
+import Cookies from 'js-cookie'
+
 import useMainStore from '@/stores/main'
 import { computed, onMounted, watch, ref, nextTick } from 'vue'
 import NoteForm from './components/NoteForm.vue'
@@ -16,7 +16,7 @@ import useElMessage from '@/hooks/useElMessage'
 import useCustomConfirm from '@/hooks/useCustomConfirm'
 import { useThrottleFn } from '@vueuse/core'
 
-import { deleteNoteApi } from '@/api/note'
+import { deleteNoteApi, getNoteByIdApi } from '@/api/note'
 const elMessage = useElMessage()
 const customConfirm = useCustomConfirm()
 const mainStore = useMainStore();
@@ -114,6 +114,14 @@ watch(() => currentProjectId.value, () => {
 }, { immediate: true })
 
 onMounted(() => {
+  // 从首页卡片那边跳转到卡片详情，自动进入项目主页，同时打开对应的笔记
+  const noteId = Cookies.get('noteId')
+  if (noteId) {
+    getNoteByIdApi(noteId).then(res => {
+      openNoteForm('view', res.data)
+    })
+    Cookies.remove('noteId')
+  }
 })
 </script>
 <template>
@@ -172,7 +180,7 @@ onMounted(() => {
         v-if="projectNoteList.length > 0">
         <transition mode="out-in" enter-active-class="duration-300 ease-out" enter-from-class="opacity-0 translate-x-5"
           leave-active-class="duration-300 ease-in" leave-to-class="opacity-0 translate-x-5">
-          <div class="flex flex-wrap gap-4" v-if="listType === 'card'">
+          <div class="flex flex-wrap gap-4 p-t-4" v-if="listType === 'card'">
             <template v-for="note in projectNoteList" :key="note.id">
               <NoteCard :noteInfo="note" @click="openNoteForm('view', note)">
                 <template #actions>
@@ -215,7 +223,8 @@ onMounted(() => {
       <transition enter-active-class="duration-300 ease-out" enter-from-class="opacity-0 translate-x-5"
         leave-active-class="duration-300 ease-in" leave-to-class="opacity-0 translate-x-5">
         <NoteForm class="absolute left-0 top-0 bg-background-light z-5 w-full h-full" :visible="isShowCreateNoteDialog"
-          :mode="noteFormMode" :noteInfo="noteInfo" v-show="isShowCreateNoteDialog" @close="closeCreateNoteDialog">
+          :mode="noteFormMode" :noteInfo="noteInfo" v-show="isShowCreateNoteDialog" @close="closeCreateNoteDialog"
+          @openEdit="noteFormMode = 'edit'">
         </NoteForm>
       </transition>
     </div>

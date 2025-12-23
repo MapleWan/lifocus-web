@@ -1,7 +1,7 @@
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
 import Editor from '@/components/Editor/index.vue'
-import { ArrowLeft } from '@element-plus/icons-vue'
+import { ArrowLeft, EditPen } from '@element-plus/icons-vue'
 import useElMessage from '@/hooks/useElMessage'
 import { addNoteApi, updateNoteApi } from '@/api/note'
 const elMessage = useElMessage()
@@ -21,7 +21,11 @@ const props = defineProps({
 })
 
 const isPreview = computed(() => props.mode === 'view')
-const emits = defineEmits(['close'])
+const emits = defineEmits(['close', 'openEdit'])
+function openEdit() {
+  emits('openEdit')
+}
+openEdit
 const savingLoading = ref(false)
 const note = ref({
   title: '',
@@ -82,7 +86,6 @@ watch(() => props.visible, (visible) => {
 onMounted(() => {
   if (props.mode !== 'add') {
     note.value = { ...props.noteInfo }
-    console.log(note.value)
   }
 })
 </script>
@@ -102,6 +105,8 @@ onMounted(() => {
       </div>
       <div class="right">
         <el-button type="primary" @click="saveNote" :loading="savingLoading" v-if="!isPreview">保存</el-button>
+        <EditPen v-if="isPreview" class="w-6 h-6 rounded-50% bg-background-hover p-1 m-x-1 hover:text-font-hover"
+          @click="openEdit" title="编辑" />
       </div>
     </div>
     <el-scrollbar class="flex-1 m-t-4">

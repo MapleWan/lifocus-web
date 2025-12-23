@@ -78,7 +78,7 @@ onBeforeUnmount(() => {
         :style="{ height: optionContainerHeight, width: optionContainerWidth, maxHeight: optionContainerHeight !== 'auto' ? optionContainerHeight : '300px' }"
         v-if="showOptions">
         <el-input placeholder="搜索项目" v-model="keyword" size="small" :prefix-icon="Search"></el-input>
-        <el-scrollbar class="flex-1" :style="{ height: optionContainerHeight }">
+        <el-scrollbar class="flex-1 m-t-1" :style="{ height: optionContainerHeight }">
           <template v-for="item in filteredProjectList" :key="item.id">
             <div
               class="option p-2 rounded hover:bg-background-hover cursor-pointer w-full text-ellipsis whitespace-nowrap overflow-hidden"

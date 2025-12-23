@@ -14,8 +14,8 @@ import useUserStore from "@/stores/user"
 const userStore = useUserStore()
 const mainStore = useMainStore()
 const router = useRouter()
-const elMessage = useElMessage();
-const customConfirm = useCustomConfirm();
+const elMessage = useElMessage()
+const customConfirm = useCustomConfirm()
 const statisticsChartRef = ref(null)
 const statisticsChart = ref(null)
 function logout() {
@@ -79,12 +79,12 @@ onBeforeUnmount(() => {
 
     <el-scrollbar class="flex-1">
       <div class="statistics rounded-xl bg-background-primary p-4">
-        <div class="statistics-header text-lg font-bold m-b-4">数据统计</div>
+        <div class="statistics-header text-lg font-bold m-b-4">【TODO】数据统计(展示数据)</div>
         <div class="statistics-chart w-full h-96" id="statistics-chart" ref="statisticsChartRef">
         </div>
       </div>
 
-      <div class="statistics rounded-xl bg-background-primary p-4 m-t-4">
+      <div class="statistics rounded-xl bg-background-primary p-4 m-t-4" v-if="false">
         <div class="statistics-header text-lg font-bold m-b-4">数据统计</div>
         <div class="statistics-chart w-full h-96">
         </div>

@@ -1,10 +1,14 @@
 <script setup>
-import { ref } from 'vue'
-import NoteCard from '@/components/NoteCard/index.vue'
+import { ref, onMounted } from 'vue'
 import ProjectIcon from '@/assets/icons/svg/project.svg'
 import NoDataIcon from "@/assets/icons/svg/noData.svg"
-
+import { useRouter } from 'vue-router'
+import useMainStore from '@/stores/main'
 import useElMessage from '@/hooks/useElMessage'
+import { getProjectNotesApi } from '@/api/project'
+import Cookies from 'js-cookie'
+const router = useRouter()
+const mainStore = useMainStore()
 const elMessage = useElMessage()
 
 const props = defineProps({
@@ -17,12 +21,29 @@ const props = defineProps({
 const recentNoteList = ref([])
 
 function goToProject(projectId) {
-  elMessage.warning(`【TODO】Go to project, projectId: ${projectId}`)
+  mainStore.setCurrentProjectId(projectId)
+  router.push({ name: 'projectDashboard' })
 }
 
 function goToNote(projectId, noteId) {
-  elMessage.warning(`【TODO】Go to note, projectId: ${projectId}, noteId: ${noteId}`)
+
+  mainStore.setCurrentProjectId(projectId)
+  Cookies.set('noteId', noteId)
+  router.push({ name: 'projectDashboard' })
 }
+
+const getProjectNotes = async () => {
+  try {
+    const res = await getProjectNotesApi({ isRecent: true, projectId: props.projectInfo.id })
+    recentNoteList.value = res.data
+  } catch (error) {
+    elMessage.error('获取项目笔记列表失败：' + error.message)
+  }
+}
+
+onMounted(() => {
+  getProjectNotes()
+})
 </script>
 <template>
   <div class="project-card lf-div-shadow p-4 rounded-3xl hover:shadow-none bg-background-primary"

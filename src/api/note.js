@@ -14,7 +14,10 @@ export function addNoteApi(data) {
   return request({
     url: '/note/singleNote',
     method: 'post',
-    data
+    data: {
+      type: 'note',
+      ...data,
+    }
   })
 }
 
@@ -32,5 +35,13 @@ export function deleteNoteApi(id) {
   return request({
     url: `/note/singleNote/${id}`,
     method: 'delete'
+  })
+}
+
+// 根据笔记 id 获取笔记信息
+export function getNoteByIdApi(id) {
+  return request({
+    url: `/note/singleNote/${id}`,
+    method: 'get'
   })
 }
