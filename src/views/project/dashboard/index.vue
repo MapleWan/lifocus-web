@@ -6,13 +6,15 @@ import { useRouter } from 'vue-router'
 import { getProjectNotesApi } from '@/api/project'
 import CardIcon from '@/assets/icons/svg/card.svg'
 import ListIcon from '@/assets/icons/svg/list.svg'
-import { Plus, DocumentCopy, EditPen, Delete } from '@element-plus/icons-vue'
+import SearchIcon from '@/assets/icons/svg/search.svg'
+import { Plus, DocumentCopy, EditPen, Delete, Search, CloseBold, ArrowLeftBold, ArrowRightBold } from '@element-plus/icons-vue'
 const router = useRouter()
 import useMainStore from '@/stores/main'
-import { computed, onMounted, watch, ref } from 'vue'
+import { computed, onMounted, watch, ref, nextTick } from 'vue'
 import NoteForm from './components/NoteForm.vue'
 import useElMessage from '@/hooks/useElMessage'
 import useCustomConfirm from '@/hooks/useCustomConfirm'
+import { useThrottleFn } from '@vueuse/core'
 
 import { deleteNoteApi } from '@/api/note'
 const elMessage = useElMessage()
@@ -23,13 +25,16 @@ const isShowCreateNoteDialog = ref(false)
 const currentProjectId = computed(() => mainStore.currentProjectId)
 const projectNoteList = ref([])
 const projectListLoading = ref(false)
-const getProjectNoteList = () => {
+const getProjectNoteList = async (title = '') => {
   projectListLoading.value = true
-  getProjectNotesApi().then(res => {
+  try {
+    const res = await getProjectNotesApi({ title })
     projectNoteList.value = res.data
-  }).finally(() => {
+  } catch (err) {
+    elMessage.error('获取项目笔记列表失败：' + err.message)
+  } finally {
     projectListLoading.value = false
-  })
+  }
 }
 
 const listType = ref('card') // card | list
@@ -72,6 +77,37 @@ function deleteNote(note) {
   })
 }
 
+// 搜索框相关
+const showSearchBox = ref(false)
+const searchQuery = ref('') // 搜索 title 关键字
+const searchTag = ref('')  // 当前搜索条件显示
+const searchInputRef = ref()
+function toggleSearchBox(val = true) {
+  showSearchBox.value = val
+  if (val) {
+    nextTick(() => {
+      searchInputRef.value.focus()
+    })
+  }
+}
+function searchTagClose() {
+  searchTag.value = ''
+  getProjectNoteList()
+}
+const handleSearch = useThrottleFn(() => {
+  getProjectNoteList(searchQuery.value).then(() => {
+    searchTag.value = searchQuery.value
+    searchQuery.value = ''
+    toggleSearchBox(false)
+  })
+}, 1000)
+
+// 对话框折叠
+const isDialogCollapsed = ref(true)
+function toggleDialogCollapse() {
+  isDialogCollapsed.value = !isDialogCollapsed.value
+}
+
 watch(() => currentProjectId.value, () => {
   isShowCreateNoteDialog.value = false
   getProjectNoteList()
@@ -82,8 +118,7 @@ onMounted(() => {
 </script>
 <template>
   <div class="dashboard-container flex w-full h-full overflow-hidden">
-    <div
-      class="left-container relative flex flex-col flex-1 h-full overflow-hidden bg-background-light rounded-lg p-2 m-r-2">
+    <div class="left-container relative flex flex-col flex-1 h-full overflow-hidden bg-background-light rounded-lg p-2">
       <div class="header flex justify-between items-center">
         <div class="left font-bold">笔记</div>
         <div class="mid flex items-center">
@@ -107,7 +142,30 @@ onMounted(() => {
           </div>
 
         </div>
-        <div class="right">
+        <div class="right relative max-w-60 flex items-center">
+          <!-- 搜索框 - 默认隐藏，点击图标时显示 -->
+          <transition enter-active-class="duration-300 ease-out" enter-from-class="opacity-0 translate-x-5"
+            leave-active-class="duration-300 ease-in" leave-to-class="opacity-0 translate-x-5">
+            <div v-show="showSearchBox"
+              class="search-box-container absolute right-0 top-1/2 transform -translate-y-1/2">
+              <el-input ref="searchInputRef" v-model="searchQuery" :autofocus="true" :prefix-icon="Search"
+                style="width: 200px;" @keyup.enter="handleSearch" @blur="toggleSearchBox(false)" placeholder="搜索笔记..."
+                class="w-40 border-0 focus:outline-none text-sm" @click.stop />
+            </div>
+          </transition>
+          <div class="flex-1 flex items-center max-w-50 overflow-hidden">
+            <div v-if="searchTag"
+              class="flex items-center w-[calc(100%-24px)] rounded p-x-2 p-y-1 text-font-hover text-xs bg-background-hover"
+              :title="searchTag">
+              <div class="overflow-hidden text-ellipsis whitespace-nowrap" style="width: calc(100% - 16px);">{{
+                searchTag }}</div>
+              <CloseBold class="w-4 h-4 text-primary-500 hover:text-font-hover cursor-pointer" @click="searchTagClose"
+                title="清除搜索条件" />
+            </div>
+
+            <SearchIcon class="w-4 h-4 m-l-2 text-primary-900 hover:text-font-hover cursor-pointer"
+              @click="toggleSearchBox(true)" title="打开搜索" />
+          </div>
         </div>
       </div>
       <el-scrollbar class="content flex-1 m-t-4 overflow-x-hidden!" v-loading="projectListLoading"
@@ -161,10 +219,23 @@ onMounted(() => {
         </NoteForm>
       </transition>
     </div>
-    <div class="right-dialog w-20% h-full overflow-hidden">
-      <SidebarDialog />
-    </div>
+    <div class="right-dialog h-full overflow-hidden relative" :class="isDialogCollapsed ? 'w-6' : 'w-20%'">
+      <transition enter-active-class="duration-500 ease-out" enter-from-class="opacity-0 translate-x-20%"
+        leave-active-class="duration-500 ease-in" leave-to-class="opacity-0 translate-x-20%">
+        <SidebarDialog class="m-l-4" v-show="!isDialogCollapsed" />
+      </transition>
+      <div class="z-6 absolute left-1 top-50% transform -translate-y-1/2" @click="toggleDialogCollapse">
 
+        <transition mode="out-in" enter-active-class="duration-500 ease-out"
+          enter-from-class="opacity-0 translate-x-20%" leave-active-class="duration-500 ease-in"
+          leave-to-class="opacity-0 translate-x-20%">
+          <ArrowLeftBold v-if="isDialogCollapsed" class="w-4 h-4 p-1 bg-background-light rounded-50% cursor-pointer"
+            title="展开对话框" />
+          <ArrowRightBold v-else class="w-4 h-4 p-1 bg-background-light  rounded-50% cursor-pointer" title="收起对话框" />
+        </transition>
+      </div>
+
+    </div>
   </div>
 </template>
 
