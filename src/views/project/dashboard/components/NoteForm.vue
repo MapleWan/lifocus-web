@@ -18,10 +18,14 @@ const props = defineProps({
     type: Object,
     default: () => ({})
   },
+  isShowBack: {
+    type: Boolean,
+    default: true,
+  },
 })
 
 const isPreview = computed(() => props.mode === 'view')
-const emits = defineEmits(['close', 'openEdit'])
+const emits = defineEmits(['close', 'openEdit', 'refresh'])
 function openEdit() {
   emits('openEdit')
 }
@@ -42,8 +46,11 @@ async function saveNote() {
     tip = '更新'
     try {
       await updateNoteApi(props.noteInfo.id, note.value)
-      clearNote()
+      // clearNote()
       close(true)
+      if (!props.isShowBack) {
+        emits('refresh')
+      }
       elMessage.success(`${tip}成功`)
     } catch (error) {
       elMessage.error(`${tip}失败: ` + error)
@@ -67,7 +74,7 @@ async function saveNote() {
 
 function close(isNeedRefresh = false) {
   emits('close', isNeedRefresh)
-  if (props.mode !== 'add') clearNote()
+  if (props.mode !== 'add' && props.isShowBack) clearNote()
 }
 
 function clearNote() {
@@ -83,6 +90,14 @@ watch(() => props.visible, (visible) => {
   }
 })
 
+watch(() => props.mode, () => {
+  note.value = { ...props.noteInfo }
+})
+
+watch(() => props.noteInfo, () => {
+  note.value = { ...props.noteInfo }
+})
+
 onMounted(() => {
   if (props.mode !== 'add') {
     note.value = { ...props.noteInfo }
@@ -92,11 +107,11 @@ onMounted(() => {
 <template>
   <div class="create-note p-4 flex flex-col h-full">
     <div class="head-bar flex justify-between items-center">
-      <div class="left cursor-pointer flex items-center hover:c-font-hover" @click="close">
+      <div class="left cursor-pointer flex items-center hover:c-font-hover" @click="close(true)" v-show="isShowBack">
         <ArrowLeft class="w-6 h-6" />
         <span>工作台</span>
       </div>
-      <div class="mid flex-1 m-x-6">
+      <div class="mid flex-1" :class="{ 'm-x-6': isShowBack, 'm-r-6': !isShowBack }">
         <div class="w-full font-bold" v-if="isPreview">
           {{ note.title }}
         </div>
