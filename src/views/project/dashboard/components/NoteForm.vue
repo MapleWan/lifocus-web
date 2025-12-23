@@ -40,17 +40,17 @@ async function saveNote() {
     elMessage.warning('请输入笔记标题')
     return
   }
+  if (!note.value.content) {
+    elMessage.warning('请输入笔记内容')
+    return
+  }
   savingLoading.value = true
   let tip = '创建' // 创建  更新
-  if (props.mode === 'edit') {
+  if (props.mode === 'edit' || note.value?.id) {
     tip = '更新'
     try {
-      await updateNoteApi(props.noteInfo.id, note.value)
-      // clearNote()
-      close(true)
-      if (!props.isShowBack) {
-        emits('refresh')
-      }
+      await updateNoteApi(note.value.id, note.value)
+      emits('refresh')
       elMessage.success(`${tip}成功`)
     } catch (error) {
       elMessage.error(`${tip}失败: ` + error)
@@ -60,9 +60,9 @@ async function saveNote() {
   } else if (props.mode === 'add') {
     tip = '创建'
     try {
-      await addNoteApi(note.value)
-      clearNote()
-      close(true)
+      const res = await addNoteApi(note.value)
+      note.value.id = res.data.id
+      emits('refresh')
       elMessage.success(`${tip}成功`)
     } catch (error) {
       elMessage.error(`${tip}失败: ` + error)
@@ -74,7 +74,7 @@ async function saveNote() {
 
 function close(isNeedRefresh = false) {
   emits('close', isNeedRefresh)
-  if (props.mode !== 'add' && props.isShowBack) clearNote()
+  if (props.mode !== 'add') clearNote()
 }
 
 function clearNote() {

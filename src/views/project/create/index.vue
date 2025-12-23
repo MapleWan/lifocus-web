@@ -31,10 +31,8 @@ function refreshProjectNodeList() {
 // 笔记编辑相关
 const editorMode = ref('edit')
 const noteInfo = ref({ title: '', content: '' })
-function closeCreateNoteDialog(isNeedRefresh = false) {
-  if (isNeedRefresh) {
-    refreshProjectNodeList()
-  }
+function refresh() {
+  refreshProjectNodeList()
 }
 
 const mainStore = useMainStore()
@@ -53,7 +51,7 @@ watch(() => currentProjectId.value, () => {
       <transition enter-active-class="duration-300 ease-out" enter-from-class="opacity-0 translate-x-5"
         leave-active-class="duration-300 ease-in" leave-to-class="opacity-0 translate-x-5">
         <NoteForm class="z-5 w-full h-full" :mode="editorMode" :noteInfo="noteInfo" :isShowBack="false"
-          @close="closeCreateNoteDialog">
+          @refresh="refresh">
         </NoteForm>
       </transition>
     </div>

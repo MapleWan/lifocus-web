@@ -6,6 +6,7 @@ import { useRouter } from 'vue-router'
 import useMainStore from '@/stores/main'
 import useElMessage from '@/hooks/useElMessage'
 import { getProjectNotesApi } from '@/api/project'
+import { DocumentCopy } from '@element-plus/icons-vue'
 import Cookies from 'js-cookie'
 const router = useRouter()
 const mainStore = useMainStore()
@@ -64,9 +65,10 @@ onMounted(() => {
       <el-scrollbar class="note flex-1 m-t-2" v-else>
         <template v-for="note in recentNoteList" :key="note.id">
           <div
-            class="cursor-pointer text-sm text-primary-500 p-y-1 flex justify-between hover:bg-background-hover p-x-2 rounded"
+            class="cursor-pointer text-sm text-primary-500 p-y-1 flex justify-between hover:bg-background-hover p-x-2 rounded underline underline-dashed w-full overflow-hidden flex items-center"
             @click="goToNote(projectInfo.id, note.id)">
-            <span>{{ note.title }}</span>
+            <DocumentCopy class="w-4 h-4 m-r-2" />
+            <div class="flex-1 overflow-hidden text-ellipsis whitespace-nowrap">{{ note.title }}</div>
             <!-- <span>{{ note.updated_at }}</span> -->
           </div>
         </template>

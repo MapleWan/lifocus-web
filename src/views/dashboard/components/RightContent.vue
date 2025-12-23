@@ -104,7 +104,7 @@ onMounted(() => {
       <div class="recent-container w-full">
         <div class="recent-title flex items-center m-t-6 m-b-4">
           <Clock class="w-4 h-4 c-primary-200" />
-          <span class="m-l-2 text-primary-200">最近</span>
+          <span class="m-l-2 text-primary-200">最近笔记</span>
         </div>
       </div>
       <div ref="noteListContainerRef" class="note-list-container w-full overflow-x-hidden"
