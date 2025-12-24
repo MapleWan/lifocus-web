@@ -26,6 +26,9 @@ const leftProjectNoteListRef = ref()
 function refreshProjectNodeList() {
   leftProjectNoteListRef?.value?.searchWithHistoryQuery()
 }
+function setCurrentNode(note) {
+  leftProjectNoteListRef?.value?.noteSelect(note)
+}
 
 
 // 笔记编辑相关
@@ -44,14 +47,14 @@ watch(() => currentProjectId.value, () => {
 </script>
 <template>
   <div class="create-container flex">
-    <div class="left flex flex-col h-full overflow-hidden bg-background-light rounded-lg p-2 w-20% m-r-2 min-w-75 ">
+    <div class="left flex flex-col h-full overflow-hidden bg-background-light rounded-lg p-2 w-20% m-r-2 min-w-75">
       <LeftProjectNoteList ref="leftProjectNoteListRef" @noteSelect="noteSelect" />
     </div>
     <div class="mid flex-1 flex flex-col h-full overflow-hidden bg-background-light rounded-lg p-2">
       <transition enter-active-class="duration-300 ease-out" enter-from-class="opacity-0 translate-x-5"
         leave-active-class="duration-300 ease-in" leave-to-class="opacity-0 translate-x-5">
         <NoteForm class="z-5 w-full h-full" :mode="editorMode" :noteInfo="noteInfo" :isShowBack="false"
-          @refresh="refresh">
+          @refresh="refresh" @setCurrentNode="setCurrentNode">
         </NoteForm>
       </transition>
     </div>

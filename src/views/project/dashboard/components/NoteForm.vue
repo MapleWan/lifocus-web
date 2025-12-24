@@ -25,7 +25,7 @@ const props = defineProps({
 })
 
 const isPreview = computed(() => props.mode === 'view')
-const emits = defineEmits(['close', 'openEdit', 'refresh'])
+const emits = defineEmits(['close', 'openEdit', 'refresh', 'setCurrentNode'])
 function openEdit() {
   emits('openEdit')
 }
@@ -63,6 +63,7 @@ async function saveNote() {
       const res = await addNoteApi(note.value)
       note.value.id = res.data.id
       emits('refresh')
+      if (!props.isShowBack) emits('setCurrentNode', note.value)
       elMessage.success(`${tip}成功`)
     } catch (error) {
       elMessage.error(`${tip}失败: ` + error)

@@ -44,8 +44,6 @@ const searchWithHistoryQuery = useThrottleFn(() => {
   })
 }, 1000)
 
-defineExpose({ searchWithHistoryQuery })
-
 // 左侧项目列表
 const projectListLoading = ref(false)
 const projectNoteList = ref([])
@@ -67,7 +65,6 @@ function noteSelect(note) {
   currentNote.value = note
   emits('noteSelect', note)
 }
-
 // 笔记删除
 // 删除笔记逻辑
 function deleteNote(note) {
@@ -90,6 +87,9 @@ function deleteNote(note) {
     })
   })
 }
+
+defineExpose({ searchWithHistoryQuery, noteSelect })
+
 onMounted(() => {
   getProjectNoteList()
 })
@@ -131,8 +131,9 @@ onMounted(() => {
 
   <div class="project-list flex-1 m-t-2 overflow-hidden" v-loading="projectListLoading">
     <el-scrollbar>
-      <div class="flex w-full rounded items-center justify-between p-y-2 p-x-1 hover:bg-background-hover "
-        v-for="note in projectNoteList" :key="note.id">
+      <div class="flex w-full rounded items-center justify-between p-y-2 p-x-1 hover:bg-background-hover"
+        :class="note.id === currentNote?.id ? 'bg-background-hover' : ''" v-for="note in projectNoteList"
+        :key="note.id">
         <div class="flex justify-between items-center flex-1 overflow-hidden cursor-pointer" @click="noteSelect(note)">
           <DocumentCopy class="w-8 h-8 p-2 rounded border border-primary-50 c-primary-50 border-solid m-r-2" />
           <div class="flex flex-col justify-between flex-1 overflow-hidden">
