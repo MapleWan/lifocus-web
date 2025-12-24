@@ -45,3 +45,13 @@ export function getNoteByIdApi(id) {
     method: 'get'
   })
 }
+
+// 下载笔记
+export function downloadNoteApi(data) {
+  return request({
+    url: `/note/export`,
+    method: 'post',
+    responseType: 'blob',
+    data
+  })
+}

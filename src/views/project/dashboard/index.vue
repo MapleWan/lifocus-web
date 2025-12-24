@@ -6,7 +6,7 @@ import { getProjectNotesApi } from '@/api/project'
 import CardIcon from '@/assets/icons/svg/card.svg'
 import ListIcon from '@/assets/icons/svg/list.svg'
 import SearchIcon from '@/assets/icons/svg/search.svg'
-import { Plus, DocumentCopy, EditPen, Delete, Search, CloseBold, ArrowLeftBold, ArrowRightBold } from '@element-plus/icons-vue'
+import { Plus, DocumentCopy, EditPen, Delete, Search, CloseBold, ArrowLeftBold, ArrowRightBold, Download } from '@element-plus/icons-vue'
 import Cookies from 'js-cookie'
 
 import useMainStore from '@/stores/main'
@@ -16,7 +16,7 @@ import useElMessage from '@/hooks/useElMessage'
 import useCustomConfirm from '@/hooks/useCustomConfirm'
 import { useThrottleFn } from '@vueuse/core'
 
-import { deleteNoteApi, getNoteByIdApi } from '@/api/note'
+import { deleteNoteApi, getNoteByIdApi, downloadNoteApi } from '@/api/note'
 const elMessage = useElMessage()
 const customConfirm = useCustomConfirm()
 const mainStore = useMainStore()
@@ -28,8 +28,12 @@ const projectListLoading = ref(false)
 const getProjectNoteList = async (title = '') => {
   projectListLoading.value = true
   try {
+    const tmpSelectedNotes = projectNoteList.value.filter(note => note.isSelected).map(note => note.id)
     const res = await getProjectNotesApi({ title })
-    projectNoteList.value = res.data
+    projectNoteList.value = res.data.map(note => ({
+      ...note,
+      isSelected: tmpSelectedNotes.includes(note.id)
+    }))
   } catch (err) {
     elMessage.error('获取项目笔记列表失败：' + err.message)
   } finally {
@@ -108,6 +112,33 @@ function toggleDialogCollapse() {
   isDialogCollapsed.value = !isDialogCollapsed.value
 }
 
+// 下载笔记
+function downloadNote(note) {
+  downloadNoteApi({ note_ids: note.id }).then(() => {
+    projectNoteList.value.forEach(n => {
+      n.isSelected = false
+    })
+  })
+}
+function batchDownloadNote() {
+  const noteIds = selectedNoteList.value.map(note => note.id).join(',')
+  downloadNoteApi({ note_ids: noteIds }).then(() => {
+    projectNoteList.value.forEach(n => {
+      n.isSelected = false
+    })
+    selectAll.value = false
+  })
+}
+
+// 选中逻辑
+const selectAll = ref(false)
+const selectedNoteList = computed(() => projectNoteList.value.filter(note => note.isSelected))
+function toggleSelectAll() {
+  projectNoteList.value.forEach(note => {
+    note.isSelected = selectAll.value
+  })
+}
+
 watch(() => currentProjectId.value, () => {
   isShowCreateNoteDialog.value = false
   getProjectNoteList()
@@ -149,6 +180,18 @@ onMounted(() => {
             <Plus class="w-3 h-3 cursor-pointer" />
           </div>
 
+          <div
+            class="m-l-2 rounded-50% p-1 flex items-center justify-center cursor-pointer bg-background-light border border-primary-100 border-solid hover:bg-background-hover hover:text-font-hover"
+            title="下载笔记" v-if="selectedNoteList.length > 0" @click="batchDownloadNote">
+            <Download class="w-3 h-3 cursor-pointer" />
+          </div>
+
+          <div
+            class="m-l-2 rounded p-x-1 flex items-center justify-center cursor-pointer bg-background-light hover:bg-background-hover"
+            title="全选/取消全选" v-if="selectedNoteList.length > 0">
+            <el-checkbox v-model="selectAll" v-if="selectedNoteList.length > 0" :label="selectAll ? '取消全选' : '全选'"
+              title="全选/取消全选" @change="toggleSelectAll" />
+          </div>
         </div>
         <div class="right relative max-w-60 flex items-center">
           <!-- 搜索框 - 默认隐藏，点击图标时显示 -->
@@ -170,7 +213,6 @@ onMounted(() => {
               <CloseBold class="w-4 h-4 text-primary-500 hover:text-font-hover cursor-pointer" @click="searchTagClose"
                 title="清除搜索条件" />
             </div>
-
             <SearchIcon class="w-4 h-4 m-l-2 text-primary-900 hover:text-font-hover cursor-pointer"
               @click="toggleSearchBox(true)" title="打开搜索" />
           </div>
@@ -185,9 +227,14 @@ onMounted(() => {
               <NoteCard :noteInfo="note" @click="openNoteForm('view', note)">
                 <template #actions>
                   <EditPen class="w-4 h-4 rounded-50% bg-background-hover p-1 m-x-1 hover:text-font-hover"
-                    @click="openNoteForm('edit', note)" />
+                    @click="openNoteForm('edit', note)" title="编辑笔记" />
+                  <Download class="w-4 h-4 rounded-50% bg-background-hover p-1 m-x-1 hover:text-font-hover"
+                    @click="downloadNote(note)" title="下载笔记" />
                   <Delete class="w-4 h-4 rounded-50% bg-background-hover p-1 hover:text-font-danger"
-                    @click="deleteNote(note)" />
+                    @click="deleteNote(note)" title="删除笔记" />
+                </template>
+                <template #select>
+                  <el-checkbox v-model="note.isSelected" title="选择笔记" />
                 </template>
               </NoteCard>
             </template>
@@ -196,7 +243,8 @@ onMounted(() => {
             <div class="flex w-full rounded items-center justify-between p-2 hover:bg-background-hover "
               v-for="note in projectNoteList" :key="note.id">
               <div class="flex justify-between items-center flex-1 overflow-hidden">
-                <DocumentCopy class="w-4 h-4" @click="openNoteForm('view', note)" />
+                <el-checkbox v-model="note.isSelected" title="选择笔记" />
+                <DocumentCopy class="m-l-2 w-4 h-4" @click="openNoteForm('view', note)" />
                 <div
                   class="m-l-4 flex-1 cursor-pointer overflow-hidden text-ellipsis whitespace-nowrap text-lg font-bold"
                   @click="openNoteForm('view', note)" :title="note.title">
@@ -207,9 +255,12 @@ onMounted(() => {
               <div>
                 <EditPen
                   class="cursor-pointer w-4 h-4 rounded-50% hover:bg-background-light p-1 m-x-1 hover:text-font-hover"
-                  @click="openNoteForm('edit', note)" />
+                  @click="openNoteForm('edit', note)" title="编辑笔记" />
+                <Download
+                  class="cursor-pointer w-4 h-4 rounded-50% hover:bg-background-light p-1 m-x-1 hover:text-font-hover"
+                  @click="downloadNote(note)" title="下载笔记" />
                 <Delete class="cursor-pointer w-4 h-4 rounded-50% hover:bg-background-light p-1 hover:text-font-danger"
-                  @click="deleteNote(note)" />
+                  @click="deleteNote(note)" title="删除笔记" />
               </div>
             </div>
           </div>

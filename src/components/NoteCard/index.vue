@@ -5,7 +5,7 @@ defineProps({
   noteInfo: {
     type: Object,
     required: true
-  },
+  }
 })
 
 const isShowActions = ref(false)
@@ -31,6 +31,15 @@ const toggleActions = () => {
       leave-to-class="opacity-0 scale-75">
       <div class="absolute top-2 right-2 flex items-center" v-show="isShowActions" @click.stop>
         <slot name="actions">
+        </slot>
+      </div>
+    </transition>
+    <transition enter-active-class="transition-all duration-300 ease-out"
+      leave-active-class="transition-all duration-300 ease-in" enter-from-class="opacity-0 scale-75"
+      leave-to-class="opacity-0 scale-75">
+      <div class="absolute bottom-2 right-2 flex items-center" v-show="isShowActions || noteInfo.isSelected"
+        @click.stop>
+        <slot name="select">
         </slot>
       </div>
     </transition>
