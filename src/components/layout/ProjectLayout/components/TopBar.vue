@@ -57,7 +57,7 @@ onMounted(() => {
   <div class="top-bar flex justify-between items-center">
     <div class="left flex items-center">
       <LogoIcon class="w-10 h-8 m-r-3 cursor-pointer" @click="toDashboard" />
-      <ProjectSelect :projectId="projectId" optionContainerWidth="180px" />
+      <ProjectSelect :projectId="projectId" optionContainerWidth="180px" optionContainerHeight="300px" />
     </div>
 
     <div class="mid">
