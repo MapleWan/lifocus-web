@@ -10,12 +10,17 @@ const props = defineProps({
   }
 })
 
+const emits = defineEmits(['refresh'])
+
+function refresh() {
+  emits('refresh')
+}
 </script>
 <template>
   <el-scrollbar class="p-x-1">
     <div class="flex flex-wrap gap-4 p-t-4" v-if="projectList.length > 0">
       <template v-for="project in projectList" :key="project.id">
-        <ProjectCard :projectInfo="project" />
+        <ProjectCard :projectInfo="project" @refresh="refresh" />
       </template>
     </div>
     <div class="w-full flex items-center justify-center p-t-4 h-60" v-else>

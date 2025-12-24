@@ -18,6 +18,15 @@ export function addProjectApi(data) {
   })
 }
 
+// 修改项目
+export function updateProjectApi(id, data) {
+  return request({
+    url: `/project/singleProject/${id}`,
+    method: 'put',
+    data
+  })
+}
+
 // 获取当前项目下的笔记
 export function getProjectNotesApi(params) {
   return request({

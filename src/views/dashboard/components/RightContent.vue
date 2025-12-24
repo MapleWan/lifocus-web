@@ -47,6 +47,7 @@ function changeListType(type) {
 }
 
 const getProjectList = (status) => {
+  if (!status) status = currentProjectTabType.value
   projectListLoading.value = true
   getUserProjectsApi({ status }).then(res => {
     projectList.value = res.data
@@ -163,7 +164,7 @@ onMounted(() => {
           </div>
         </div>
         <div class="flex-1 overflow-hidden" v-loading="projectListLoading">
-          <ProjectListCard :projectList="projectList" v-show="listType === 'card'" />
+          <ProjectListCard :projectList="projectList" v-show="listType === 'card'" @refresh="getProjectList" />
           <projectListTable :projectList="projectList" v-show="listType === 'list'" />
         </div>
       </div>
