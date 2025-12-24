@@ -138,6 +138,9 @@ function toggleSelectAll() {
     note.isSelected = selectAll.value
   })
 }
+watch(() => selectedNoteList.value.length, (newValue) => {
+  selectAll.value = newValue === projectNoteList.value.length
+})
 
 watch(() => currentProjectId.value, () => {
   isShowCreateNoteDialog.value = false
