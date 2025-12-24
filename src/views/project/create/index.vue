@@ -29,7 +29,7 @@ function refreshProjectNodeList() {
 
 
 // 笔记编辑相关
-const editorMode = ref('edit')
+const editorMode = ref('add')
 const noteInfo = ref({ title: '', content: '' })
 function refresh() {
   refreshProjectNodeList()

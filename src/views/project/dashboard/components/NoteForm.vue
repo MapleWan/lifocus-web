@@ -57,7 +57,7 @@ async function saveNote() {
     } finally {
       savingLoading.value = false
     }
-  } else if (props.mode === 'add') {
+  } else if (props.mode === 'add' || !note.value?.id) {
     tip = '创建'
     try {
       const res = await addNoteApi(note.value)
