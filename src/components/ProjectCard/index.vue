@@ -88,12 +88,13 @@ const updateProjectName = () => {
 }
 
 onMounted(() => {
-  getProjectNotes()
+  // getProjectNotes()
 })
 </script>
 <template>
-  <div class="project-card lf-div-shadow p-4 rounded-3xl hover:shadow-none bg-background-primary"
-    style="border: 1px solid rgba(2, 4, 26, 0.16);" @mouseenter="toggleActions" @mouseleave="toggleActions">
+  <div class="project-card lf-div-shadow p-4 rounded-3xl hover:shadow-none bg-background-primary cursor-pointer"
+    style="border: 1px solid rgba(2, 4, 26, 0.16);" @mouseenter="toggleActions" @mouseleave="toggleActions"
+    @click="goToProject(projectInfo.id)">
     <div class="w-50 h-40 overflow-hidden flex flex-col">
       <div class="header flex items-center justify-between cursor-pointer" :title="projectInfo.name"
         @click="goToProject(projectInfo.id)">
@@ -104,9 +105,10 @@ onMounted(() => {
       </div>
       <div class="time text-sm text-primary-50 flex m-t-2">{{ projectInfo.updated_at }}</div>
       <template v-if="recentNoteList.length === 0">
-        <div class="flex flex-col items-center justify-center">
-          <NoDataIcon class="w-15 h-15 m-auto" />
-          <span class="text-sm text-primary-100">暂无数据</span>
+        <div class="flex flex-col items-center justify-center w-full h-full">
+          <!-- <NoDataIcon class="w-15 h-15 m-auto" />
+          <span class="text-sm text-primary-100">暂无数据</span> -->
+          {{ projectInfo.name }}
         </div>
       </template>
       <el-scrollbar class="note flex-1 m-t-2" v-else>
