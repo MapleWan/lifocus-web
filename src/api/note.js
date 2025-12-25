@@ -55,3 +55,15 @@ export function downloadNoteApi(data) {
     data
   })
 }
+
+// 上传笔记
+export function uploadNoteApi(data) {
+  return request({
+    url: `/note/import`,
+    method: 'post',
+    data,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+}

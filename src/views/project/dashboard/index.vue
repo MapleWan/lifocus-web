@@ -6,7 +6,7 @@ import { getProjectNotesApi } from '@/api/project'
 import CardIcon from '@/assets/icons/svg/card.svg'
 import ListIcon from '@/assets/icons/svg/list.svg'
 import SearchIcon from '@/assets/icons/svg/search.svg'
-import { Plus, DocumentCopy, EditPen, Delete, Search, CloseBold, ArrowLeftBold, ArrowRightBold, Download } from '@element-plus/icons-vue'
+import { Plus, DocumentCopy, EditPen, Delete, Search, CloseBold, ArrowLeftBold, ArrowRightBold, Download, Upload } from '@element-plus/icons-vue'
 import Cookies from 'js-cookie'
 
 import useMainStore from '@/stores/main'
@@ -16,7 +16,7 @@ import useElMessage from '@/hooks/useElMessage'
 import useCustomConfirm from '@/hooks/useCustomConfirm'
 import { useThrottleFn } from '@vueuse/core'
 
-import { deleteNoteApi, getNoteByIdApi, downloadNoteApi } from '@/api/note'
+import { deleteNoteApi, getNoteByIdApi, downloadNoteApi, uploadNoteApi } from '@/api/note'
 const elMessage = useElMessage()
 const customConfirm = useCustomConfirm()
 const mainStore = useMainStore()
@@ -130,6 +130,36 @@ function batchDownloadNote() {
   })
 }
 
+// 添加上传笔记功能
+function uploadNote() {
+  // 创建隐藏的文件输入元素
+  const input = document.createElement('input')
+  input.type = 'file'
+  input.accept = '.md,.zip' // 支持的文件类型
+  input.onchange = (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+
+    // 检查文件大小 (限制为10MB)
+    if (file.size > 100 * 1024 * 1024) {
+      elMessage.error('文件大小不能超过100MB')
+      return
+    }
+
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('project_id', currentProjectId.value)
+
+    uploadNoteApi(formData).then((res) => {
+      elMessage.success('上传成功，' + res.message)
+      getProjectNoteList() // 刷新笔记列表
+    }).catch(err => {
+      elMessage.error('上传失败：' + err.message)
+    })
+  }
+  input.click()
+}
+
 // 选中逻辑
 const selectAll = ref(false)
 const selectedNoteList = computed(() => projectNoteList.value.filter(note => note.isSelected))
@@ -181,6 +211,12 @@ onMounted(() => {
             class="m-l-2 rounded-50% p-1 flex items-center justify-center cursor-pointer bg-background-light border border-primary-100 border-solid hover:bg-background-hover hover:text-font-hover"
             title="新增笔记" @click="openNoteForm('add')">
             <Plus class="w-3 h-3 cursor-pointer" />
+          </div>
+
+          <div
+            class="m-l-2 rounded-50% p-1 flex items-center justify-center cursor-pointer bg-background-light border border-primary-100 border-solid hover:bg-background-hover hover:text-font-hover"
+            title="上传笔记" @click="uploadNote">
+            <Upload class="w-3 h-3 cursor-pointer" />
           </div>
 
           <div
