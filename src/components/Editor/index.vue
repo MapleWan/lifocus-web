@@ -1,5 +1,5 @@
 <template>
-  <MdPreview v-model="content" v-if="isPreview" v-bind="previewConfigTemplate" style="height: 100%;" />
+  <MdPreview v-model="content" v-if="isPreview" v-bind="previewConfigTemplate" style="background-color: transparent;" />
   <MdEditor v-model="content" v-else v-bind="editorConfigTemplate" style="height: 100%;" :footers="footers">
     <template #defFooters>
       {{ dayjs().format('YYYY-MM-DD HH:mm:ss') }}

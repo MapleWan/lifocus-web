@@ -1,7 +1,7 @@
 <script setup>
-import { ref } from 'vue';
-
-defineProps({
+import { ref, onMounted } from 'vue'
+import Editor from '@/components/Editor/index.vue'
+const props = defineProps({
   noteInfo: {
     type: Object,
     required: true
@@ -12,6 +12,12 @@ const isShowActions = ref(false)
 const toggleActions = () => {
   isShowActions.value = !isShowActions.value
 }
+
+const content = ref('')
+onMounted(() => {
+  content.value = props.noteInfo.content
+})
+
 </script>
 <template>
   <div class="note-card relative lf-div-shadow lf-div-border p-x-2 p-t-2 rounded-2xl cursor-pointer hover:shadow-none"
@@ -22,7 +28,9 @@ const toggleActions = () => {
       <!-- <div class="content text-primary-200 text-sm flex-1 overflow-x-hidden overflow-y-auto">{{ noteInfo?.content || ''
       }}</div> -->
       <el-scrollbar class="content text-primary-200 text-sm flex-1 overflow-x-hidden break-all">
-        {{ noteInfo?.content || '' }}
+        <!-- {{ noteInfo?.content || '' }} -->
+
+        <Editor :isPreview="true" class="p-4" v-model="content" />
       </el-scrollbar>
       <div class="time text-xs m-t-1 text-primary-50">{{ noteInfo?.updated_at || '' }}</div>
     </div>
