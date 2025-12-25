@@ -12,6 +12,8 @@ import { ref, computed, onMounted } from 'vue'
 import { getUserProjectsApi, addProjectApi } from "@/api/project"
 import { getRecentNoteListApi } from "@/api/note"
 const elMessage = useElMessage()
+
+const emits = defineEmits(['refreshLeftToolbar'])
 const addProjectDialogVisible = ref(false)
 const projectName = ref('')
 function openAddProjectDialog() {
@@ -24,6 +26,7 @@ function addProject() {
       addProjectDialogVisible.value = false
       projectName.value = ''
       getProjectList(currentProjectTabType.value)
+      emits('refreshLeftToolbar')
     }).catch(err => {
       elMessage.error('新增项目失败: ' + err)
     })
@@ -60,8 +63,9 @@ const getProjectList = (status) => {
 
 const getRecentNoteList = () => {
   recentNoteLoading.value = true
-  getRecentNoteListApi({ isRecent: 1 }).then(res => {
-    recentNoteList.value = res.data
+  getRecentNoteListApi({ isRecent: true, page_no: 1, page_szie: 30 }).then(res => {
+    // recentNoteList.value = res.data.slice(0, 30)
+    recentNoteList.value = res.page_data.data
   }).catch(err => {
     elMessage.error('获取最近笔记列表失败: ' + err)
   }).finally(() => {

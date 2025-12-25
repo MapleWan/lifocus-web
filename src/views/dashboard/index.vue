@@ -23,8 +23,7 @@ function switchShowAccountSetting(val) {
 }
 
 const recentProjectList = ref([])
-const recentProjectListLoading = ref(false)
-onMounted(() => {
+const getRecentProjectList = () => {
   recentProjectListLoading.value = true
   getUserProjectsApi({ isRecent: 1 }).then(res => {
     recentProjectList.value = res.data
@@ -33,7 +32,15 @@ onMounted(() => {
   }).finally(() => {
     recentProjectListLoading.value = false
   })
+}
+const recentProjectListLoading = ref(false)
+onMounted(() => {
+  getRecentProjectList()
 })
+
+function refreshLeftToolbar() {
+  getRecentProjectList()
+}
 </script>
 <template>
   <div class="dashboard-container p-4 bg-background-primary h-full flex" :class="{ 'flex-col': !mainStore.isPc }">
@@ -47,7 +54,8 @@ onMounted(() => {
 
     <div class="right-container flex-1 bg-white rounded-xl p-y-6 overflow-hidden">
       <transition name="fade" mode="out-in">
-        <RightContent class="w-full" v-if="!showAccountSetting" key="right-content" />
+        <RightContent class="w-full" v-if="!showAccountSetting" key="right-content"
+          @refreshLeftToolbar="refreshLeftToolbar" />
         <AccountSetting class="w-full" v-else key="account-setting" />
       </transition>
     </div>
