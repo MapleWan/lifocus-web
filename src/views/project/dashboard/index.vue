@@ -245,7 +245,7 @@ onMounted(() => {
             <span class="el-dropdown-link">
               <div
                 class="m-l-2 rounded-50% p-1 flex items-center justify-center cursor-pointer bg-background-light border border-primary-100 border-solid hover:bg-background-hover hover:text-font-hover"
-                title="上传笔记">
+                title="排序">
                 <Sort class="w-3 h-3" />
               </div>
             </span>
