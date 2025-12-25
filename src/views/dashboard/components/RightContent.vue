@@ -138,10 +138,10 @@ onMounted(() => {
               </span>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item command="updated_at-down">更新日期(&#8595;)</el-dropdown-item>
-                  <el-dropdown-item command="updated_at-up">更新日期(&#8593;)</el-dropdown-item>
-                  <el-dropdown-item command="created_at-down">创建日期(&#8595;)</el-dropdown-item>
-                  <el-dropdown-item command="created_at-up">创建日期(&#8593;)</el-dropdown-item>
+                  <el-dropdown-item command="updated_at-down">更新时间(&#8595;)</el-dropdown-item>
+                  <el-dropdown-item command="updated_at-up">更新时间(&#8593;)</el-dropdown-item>
+                  <el-dropdown-item command="created_at-down">创建时间(&#8595;)</el-dropdown-item>
+                  <el-dropdown-item command="created_at-up">创建时间(&#8593;)</el-dropdown-item>
                   <el-dropdown-item command="name-down">项目名称(&#8595;)</el-dropdown-item>
                   <el-dropdown-item command="name-up">项目名称(&#8593;)</el-dropdown-item>
                 </el-dropdown-menu>

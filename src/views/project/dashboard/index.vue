@@ -6,7 +6,7 @@ import { getProjectNotesApi } from '@/api/project'
 import CardIcon from '@/assets/icons/svg/card.svg'
 import ListIcon from '@/assets/icons/svg/list.svg'
 import SearchIcon from '@/assets/icons/svg/search.svg'
-import { Plus, DocumentCopy, EditPen, Delete, Search, CloseBold, ArrowLeftBold, ArrowRightBold, Download, Upload } from '@element-plus/icons-vue'
+import { Plus, DocumentCopy, EditPen, Delete, Search, CloseBold, ArrowLeftBold, ArrowRightBold, Download, Upload, Sort } from '@element-plus/icons-vue'
 import Cookies from 'js-cookie'
 
 import useMainStore from '@/stores/main'
@@ -34,6 +34,7 @@ const getProjectNoteList = async (title = '') => {
       ...note,
       isSelected: tmpSelectedNotes.includes(note.id)
     }))
+    handleCommand(currentSort.value)
   } catch (err) {
     elMessage.error('获取项目笔记列表失败：' + err.message)
   } finally {
@@ -49,7 +50,7 @@ function changeListType(type) {
 // 新增笔记逻辑
 const noteFormMode = ref('add') // add, view, edit
 const noteInfo = ref({})
-function openNoteForm(type, note) {
+function openNoteForm(type, note = {}) {
   noteFormMode.value = type
   noteInfo.value = note
   isShowCreateNoteDialog.value = true
@@ -172,6 +173,27 @@ watch(() => selectedNoteList.value.length, (newValue) => {
   selectAll.value = newValue === projectNoteList.value.length
 })
 
+// 排序
+function projectNoteListSort(type, direction) {
+  projectNoteList.value = projectNoteList.value.sort((a, b) => {
+    if (['updated_at', 'created_at'].includes(type)) {
+      return (new Date(b[type]) - new Date(a[type])) * direction
+    }
+    if (['title'].includes(type))
+      return (a[type].localeCompare(b[type])) * direction * -1
+    else {
+      return (a[type] - b[type]) * direction
+    }
+  })
+}
+const currentSort = ref('title-up')
+function handleCommand(command) {
+  currentSort.value = command
+  let [type, direction] = command.split('-')
+  direction = direction === 'down' ? 1 : -1
+  projectNoteListSort(type, direction)
+}
+
 watch(() => currentProjectId.value, () => {
   isShowCreateNoteDialog.value = false
   getProjectNoteList()
@@ -218,6 +240,26 @@ onMounted(() => {
             title="上传笔记" @click="uploadNote">
             <Upload class="w-3 h-3 cursor-pointer" />
           </div>
+
+          <el-dropdown trigger="click" @command="handleCommand">
+            <span class="el-dropdown-link">
+              <div
+                class="m-l-2 rounded-50% p-1 flex items-center justify-center cursor-pointer bg-background-light border border-primary-100 border-solid hover:bg-background-hover hover:text-font-hover"
+                title="上传笔记">
+                <Sort class="w-3 h-3" />
+              </div>
+            </span>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item command="updated_at-down">更新时间(&#8595;)</el-dropdown-item>
+                <el-dropdown-item command="updated_at-up">更新时间(&#8593;)</el-dropdown-item>
+                <el-dropdown-item command="created_at-down">创建时间(&#8595;)</el-dropdown-item>
+                <el-dropdown-item command="created_at-up">创建时间(&#8593;)</el-dropdown-item>
+                <el-dropdown-item command="title-down">笔记名称(&#8595;)</el-dropdown-item>
+                <el-dropdown-item command="title-up">笔记名称(&#8593;)</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
 
           <div
             class="m-l-2 rounded-50% p-1 flex items-center justify-center cursor-pointer bg-background-light border border-primary-100 border-solid hover:bg-background-hover hover:text-font-hover"
