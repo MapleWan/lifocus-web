@@ -74,7 +74,7 @@ async function saveNote() {
 }
 
 function close(isNeedRefresh = false) {
-  emits('close', isNeedRefresh)
+  emits('close', isNeedRefresh && props.mode !== 'view')
   if (props.mode !== 'add') clearNote()
 }
 
