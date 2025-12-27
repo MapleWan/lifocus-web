@@ -3,7 +3,7 @@ import { computed, onMounted, ref, watch } from 'vue'
 import Editor from '@/components/Editor/index.vue'
 import { ArrowLeft, EditPen } from '@element-plus/icons-vue'
 import useElMessage from '@/hooks/useElMessage'
-import { addNoteApi, updateNoteApi } from '@/api/note'
+import { addNoteApi, updateNoteApi, getNoteByIdApi } from '@/api/note'
 const elMessage = useElMessage()
 const props = defineProps({
   visible: {
@@ -29,7 +29,6 @@ const emits = defineEmits(['close', 'openEdit', 'refresh', 'setCurrentNode'])
 function openEdit() {
   emits('openEdit')
 }
-openEdit
 const savingLoading = ref(false)
 const note = ref({
   title: '',
@@ -91,12 +90,17 @@ watch(() => props.visible, (visible) => {
   }
 })
 
-watch(() => props.mode, () => {
-  note.value = { ...props.noteInfo }
-})
+// watch(() => props.mode, () => {
+//   note.value = { ...props.noteInfo }
+// })
 
 watch(() => props.noteInfo, () => {
   note.value = { ...props.noteInfo }
+  if (note.value?.id && !note.value.content) {
+    getNoteByIdApi(note.value.id).then(res => {
+      note.value = res.data
+    })
+  }
 })
 
 onMounted(() => {

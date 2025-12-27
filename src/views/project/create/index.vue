@@ -16,7 +16,7 @@ function toggleDialogCollapse() {
 function noteSelect(note) {
   if (note && note?.id) {
     noteInfo.value = note
-    editorMode.value = 'edit'
+    editorMode.value = 'view'
   } else {
     noteInfo.value = { title: '', content: '' }
     editorMode.value = 'add'
@@ -54,7 +54,7 @@ watch(() => currentProjectId.value, () => {
       <transition enter-active-class="duration-300 ease-out" enter-from-class="opacity-0 translate-x-5"
         leave-active-class="duration-300 ease-in" leave-to-class="opacity-0 translate-x-5">
         <NoteForm class="z-5 w-full h-full" :mode="editorMode" :noteInfo="noteInfo" :isShowBack="false"
-          @refresh="refresh" @setCurrentNode="setCurrentNode">
+          @refresh="refresh" @setCurrentNode="setCurrentNode" @openEdit="editorMode = 'edit'">
         </NoteForm>
       </transition>
     </div>

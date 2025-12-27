@@ -1,5 +1,5 @@
 <template>
-  <MdPreview v-model="content" v-if="isPreview" v-bind="previewConfigTemplate" style="background-color: transparent;" />
+  <MdPreview v-model="content" v-if="isPreview" v-bind="previewConfigTemplate" style="height: 100%;" />
   <MdEditor v-model="content" v-else v-bind="editorConfigTemplate" style="height: 100%;" :footers="footers">
     <template #defFooters>
       {{ dayjs().format('YYYY-MM-DD HH:mm:ss') }}
@@ -20,7 +20,7 @@ const defaultEditorConfig = {
   showCodeRowNumber: true, // 代码块是否显示行号
   preview: true, // 是否显示预览，可选值：true, false
   htmlPreview: false, // 是否显示 HTML 预览，可选值：true(需要将preview设置为false), false
-  previewTheme: 'github', // 预览主题，可选值：default、github、vuepress、mk-cute、smart-blue、cyanosis
+  previewTheme: 'cyanosis', // 预览主题，可选值：default、github、vuepress、mk-cute、smart-blue、cyanosis
   codeTheme: 'github', // 代码主题，可选值：atom、a11y、github、gradient、kimbie、paraiso、qtcreator、stackoverflow
   toolbars: [
     'bold',
@@ -62,13 +62,14 @@ const defaultEditorConfig = {
   readOnly: false, // 是否只读
   showToolbarName: false, // 是否显示工具栏名称
   inputBoxWidth: '50%', // 输入框宽度
+  noUploadImg: true, // 是否禁用图片上传
   catalogLayout: 'fixed', // 目录布局，可选值：'fixed': 悬浮在内容上方，'flat': 展示在右侧
 }
 
 const defaultPreviewConfig = {
   theme: 'light', // 主题，可选值：dark、light
   showCodeRowNumber: true, // 代码块是否显示行号
-  previewTheme: 'github', // 预览主题，可选值：default、github、vuepress、mk-cute、smart-blue、cyanosis
+  previewTheme: 'cyanosis', // 预览主题，可选值：default、github、vuepress、mk-cute、smart-blue、cyanosis
   codeTheme: 'github', // 代码主题，可选值：atom、a11y、github、gradient、kimbie、paraiso、qtcreator、stackoverflow
 }
 
