@@ -29,8 +29,8 @@ onMounted(() => {
       }}</div> -->
       <el-scrollbar class="content text-primary-200 text-sm flex-1 overflow-x-hidden break-all">
         <!-- {{ noteInfo?.content || '' }} -->
-
-        <Editor :isPreview="true" class="p-4" v-model="content" />
+        <!-- <Editor :isPreview="true" class="p-4" v-model="content" /> -->
+        {{ noteInfo?.title || '' }}
       </el-scrollbar>
       <div class="time text-xs m-t-1 text-primary-50">{{ noteInfo?.updated_at || '' }}</div>
     </div>

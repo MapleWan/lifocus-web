@@ -2,9 +2,11 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { Search, ArrowRight } from '@element-plus/icons-vue'
 import { watchDebounced } from '@vueuse/core'
-import { getUserProjectsApi } from '@/api/project'
 import useMainStore from '@/stores/main'
+import useProjectStore from '@/stores/project'
 const mainStore = useMainStore()
+const projectStore = useProjectStore()
+
 
 const props = defineProps({
   optionContainerHeight: { type: String, default: 'auto' },
@@ -19,9 +21,10 @@ const projectList = ref([])
 const projectIdToNameDict = ref({})
 // 获取项目列表
 const getProjectList = async () => {
-  const res = await getUserProjectsApi()
-  projectList.value = res.data
-  projectIdToNameDict.value = res.data.reduce((acc, cur) => {
+  if (projectStore.projectList.length === 0)
+    await projectStore.fetchProjects()
+  projectList.value = projectStore.projectList
+  projectIdToNameDict.value = projectList.value.reduce((acc, cur) => {
     acc[cur.id] = cur.name
     return acc
   }, {})
@@ -43,7 +46,6 @@ const keyword = ref('')
 watchDebounced(keyword, searchProject, { debounce: 300 })
 
 function searchProject() {
-  console.log("搜索...")
   filteredProjectList.value = projectList.value.filter(item => item.name.includes(keyword.value))
 }
 

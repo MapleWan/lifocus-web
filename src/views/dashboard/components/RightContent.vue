@@ -7,13 +7,13 @@ import RecentNoteList from './RecentNoteList.vue'
 import ProjectListCard from './ProjectListCard.vue'
 import projectListTable from './ProjectListTable.vue'
 import useElMessage from '@/hooks/useElMessage'
-import { ref, computed, onMounted } from 'vue'
+import useProjectStore from '@/stores/project'
+import { ref, onMounted } from 'vue'
 
 import { getUserProjectsApi, addProjectApi } from "@/api/project"
 import { getRecentNoteListApi } from "@/api/note"
 const elMessage = useElMessage()
-
-const emits = defineEmits(['refreshLeftToolbar'])
+const projectStore = useProjectStore()
 const addProjectDialogVisible = ref(false)
 const projectName = ref('')
 function openAddProjectDialog() {
@@ -26,7 +26,7 @@ function addProject() {
       addProjectDialogVisible.value = false
       projectName.value = ''
       getProjectList(currentProjectTabType.value)
-      emits('refreshLeftToolbar')
+      projectStore.fetchRecentProjects()
     }).catch(err => {
       elMessage.error('新增项目失败: ' + err)
     })
@@ -38,8 +38,8 @@ const recentNoteList = ref([])
 const recentNoteLoading = ref(false)
 const projectList = ref([])
 const projectListLoading = ref(false)
-const noteListContainerRef = ref(null)
 const currentProjectTabType = ref('active') // active archived
+const currentSortType = ref('updated_at-down')
 function changeProjectTabType(type) {
   currentProjectTabType.value = type
   getProjectList(type)
@@ -54,6 +54,7 @@ const getProjectList = (status) => {
   projectListLoading.value = true
   getUserProjectsApi({ status }).then(res => {
     projectList.value = res.data
+    handleCommand(currentSortType.value)
   }).catch(err => {
     elMessage.error('获取项目列表失败: ' + err)
   }).finally(() => {
@@ -73,14 +74,14 @@ const getRecentNoteList = () => {
   })
 }
 
+
 function projectListSort(type, direction) {
-  console.log(projectList.value)
   projectList.value = projectList.value.sort((a, b) => {
     if (['updated_at', 'created_at'].includes(type)) {
       return (new Date(b[type]) - new Date(a[type])) * direction
     }
     if (['name'].includes(type))
-      return (a[type].localeCompare(b[type])) * direction
+      return (a[type].localeCompare(b[type])) * direction * -1
     else {
       return (a[type] - b[type]) * direction
     }

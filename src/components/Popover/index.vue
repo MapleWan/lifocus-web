@@ -47,8 +47,8 @@ const toggleShowPopover = () => {
   left: 0;
   right: 0;
   border-radius: 8px;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-  /* background-color: white;
+  /* box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  background-color: white;
   border: 1px solid #dcdfe6;
   padding: 8px;
   display: flex;

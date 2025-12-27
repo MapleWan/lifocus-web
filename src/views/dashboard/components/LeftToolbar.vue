@@ -8,7 +8,9 @@ import NoDataIcon from "@/assets/icons/svg/noData.svg"
 import { computed } from "vue"
 
 import useMainStore from '@/stores/main'
+import useProjectStore from "@/stores/project"
 const mainStore = useMainStore()
+const projectStore = useProjectStore()
 import useUserStore from "@/stores/user"
 import { useRouter } from "vue-router"
 const userStore = useUserStore()
@@ -17,10 +19,6 @@ const router = useRouter()
 
 const emit = defineEmits(['toSearch', 'switchAccountSetting'])
 const props = defineProps({
-  recentProjectList: {
-    type: Array,
-    default: () => []
-  },
   recentProjectListLoading: {
     type: Boolean,
     default: false
@@ -67,8 +65,8 @@ function closeAccountSetting() {
         <div class="c-primary-300 text-xs">近期项目</div>
 
         <el-scrollbar class="animate__animated animate__fadeInLeft flex-1" v-loading="projectListLoading">
-          <template v-if="recentProjectList.length > 0">
-            <template v-for="item in recentProjectList" :key="item">
+          <template v-if="projectStore.recentProjectList.length > 0">
+            <template v-for="item in projectStore.recentProjectList" :key="item">
               <div class="project-item flex items-center cursor-pointer hover:bg-background-hover p-2 rounded"
                 :title="item.name" @click="openProject(item)">
                 <ProjectIcon class="m-r-1 w-4 h-4 flex-shrink-0" v-if="!item.icon" />

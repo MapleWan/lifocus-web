@@ -1,10 +1,11 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import ProjectIcon from '@/assets/icons/svg/project.svg'
 import NoDataIcon from "@/assets/icons/svg/noData.svg"
 import { useRouter } from 'vue-router'
 import useMainStore from '@/stores/main'
 import useElMessage from '@/hooks/useElMessage'
+import useProjectStore from '@/stores/project'
 import { getProjectNotesApi, updateProjectApi } from '@/api/project'
 import { DocumentCopy, EditPen } from '@element-plus/icons-vue'
 import Cookies from 'js-cookie'
@@ -12,6 +13,7 @@ import useCustomConfirm from '@/hooks/useCustomConfirm'
 const router = useRouter()
 const mainStore = useMainStore()
 const elMessage = useElMessage()
+const projectStore = useProjectStore()
 const customConfirm = useCustomConfirm()
 const props = defineProps({
   projectInfo: {
@@ -77,6 +79,8 @@ const updateProjectName = () => {
       }).then(() => {
         elMessage.success("修改成功")
         emits('refresh')
+        projectStore.fetchRecentProjects()
+        projectStore.fetchProjects()
       }).catch(err => {
         elMessage.error("修改失败：", err)
       }).finally(() => {
@@ -85,6 +89,14 @@ const updateProjectName = () => {
     }
   })
   // isEditProjectName.value = false
+}
+
+const editInputRef = ref()
+function openEdit() {
+  isEditProjectName.value = true
+  nextTick(() => {
+    editInputRef.value.focus()
+  })
 }
 
 onMounted(() => {
@@ -99,8 +111,8 @@ onMounted(() => {
       <div class="header flex items-center justify-between cursor-pointer" :title="projectInfo.name"
         @click="goToProject(projectInfo.id)">
         <ProjectIcon class="w-7 h-7 flex-shrink-0" />
-        <el-input v-model="projectName" v-if="isEditProjectName" @click.stop @keydown.enter="updateProjectName"
-          @blur="updateProjectName"></el-input>
+        <el-input ref="editInputRef" v-model="projectName" v-if="isEditProjectName" autofocus @click.stop
+          @keydown.enter="updateProjectName" @blur="updateProjectName"></el-input>
         <div class="title line-clamp-1 font-bold text-xl" v-else>{{ projectInfo.name }}</div>
       </div>
       <div class="time text-sm text-primary-50 flex m-t-2">{{ projectInfo.updated_at }}</div>
@@ -130,7 +142,7 @@ onMounted(() => {
       <div class="absolute top-2 right-2 flex items-center" v-show="isShowActions" @click.stop>
         <slot name="actions">
           <EditPen class="w-6 h-6 rounded-50% bg-background-light p-1 m-x-1 hover:text-font-hover cursor-pointer"
-            @click="isEditProjectName = true" />
+            @click="openEdit" />
         </slot>
       </div>
     </transition>

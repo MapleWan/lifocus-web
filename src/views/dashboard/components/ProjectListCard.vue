@@ -1,9 +1,8 @@
 <script setup>
 import ProjectCard from '@/components/ProjectCard/index.vue'
 import NoDataIcon from "@/assets/icons/svg/noData.svg"
-import { ref } from 'vue'
 
-const props = defineProps({
+defineProps({
   projectList: {
     type: Array,
     required: true
