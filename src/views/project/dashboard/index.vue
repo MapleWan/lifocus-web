@@ -52,8 +52,15 @@ const noteFormMode = ref('add') // add, view, edit
 const noteInfo = ref({})
 function openNoteForm(type, note = {}) {
   noteFormMode.value = type
-  noteInfo.value = note
-  isShowCreateNoteDialog.value = true
+  if (type === 'view') {
+    getNoteByIdApi(note.id).then(res => {
+      noteInfo.value = res.data
+      isShowCreateNoteDialog.value = true
+    })
+  } else {
+    noteInfo.value = note
+    isShowCreateNoteDialog.value = true
+  }
 }
 function closeCreateNoteDialog(isNeedRefresh = false) {
   isShowCreateNoteDialog.value = false
